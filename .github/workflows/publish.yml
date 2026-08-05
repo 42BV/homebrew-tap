@@ -47,9 +47,9 @@ jobs:
         run: |
           if [[ -n "$HEAD_SHA" ]]
           then
-            brew pr-pull --debug --no-cherry-pick --tap="$GITHUB_REPOSITORY" --head-sha="$HEAD_SHA" "$PULL_REQUEST"
+            brew pr-pull --debug --tap="$GITHUB_REPOSITORY" --head-sha="$HEAD_SHA" "$PULL_REQUEST"
           else
-            brew pr-pull --debug --no-cherry-pick --tap="$GITHUB_REPOSITORY" "$PULL_REQUEST"
+            brew pr-pull --debug --tap="$GITHUB_REPOSITORY" "$PULL_REQUEST"
           fi
 
       - name: Push commits
