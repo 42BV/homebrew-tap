@@ -25,12 +25,15 @@ be used for new installations.
    SHA-256.
 3. Let `brew test-bot` validate the Formula and create bottle artifacts on
    Apple Silicon and Intel macOS.
-4. After reviewing and merging that pull request, run the `brew pr-pull`
-   workflow with its number and reviewed head SHA. It uploads bottles to GitHub
-   Packages and commits the generated `bottle do` checksums to the Formula.
+4. Leave that Formula pull request open and, after reviewing its green checks,
+   run the `brew pr-pull` workflow with its number and reviewed head SHA. It
+   publishes bottles as public assets on the tap's GitHub Release and commits
+   the generated `bottle do` checksums to `main`.
 
-The generated GitHub Container package must remain public so Homebrew users can
-download bottles without credentials.
+The public release assets are the customer download path; a matching
+`brew install 42bv/tap/normatik` pours a bottle without installing Go, Xcode or
+other build tools. The Formula's public source archive remains the reproducible
+fallback for platforms without a matching bottle.
 
 ## Support
 
