@@ -80,7 +80,8 @@ jobs:
           brew bottle --json --root-url=https://ghcr.io/v2/42bv/tap 42bv/tap/normatik
           brew bottle --merge --write --no-commit --no-all-checks ./normatik--*.bottle.json
           brew uninstall --formula --force --ignore-dependencies 42bv/tap/normatik
-          brew install ./normatik--*.bottle.tar.gz
+          brew install --only-dependencies "$PWD"/normatik--*.bottle.tar.gz
+          brew install "$PWD"/normatik--*.bottle.tar.gz
           brew test 42bv/tap/normatik
 
       - name: Upload bottles as artifact
