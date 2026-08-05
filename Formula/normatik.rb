@@ -5,6 +5,11 @@ class Normatik < Formula
   sha256 "5493c6264f2f8b0339bc670ab53fe4b4528e9c38590db8c9d6966eff4d1984a5"
   license "MIT"
 
+  livecheck do
+    url :stable
+    strategy :github_latest
+  end
+
   depends_on "go" => :build
 
   def install
