@@ -16,10 +16,15 @@ jobs:
   test-bot:
     strategy:
       matrix:
-        # macOS 15 is a stable Homebrew bottle target for both architectures.
-        # macOS 26 Intel currently has an unbottled Go dependency, which makes
-        # Homebrew correctly skip creation of the Normatik bottle.
-        os: [macos-15, macos-15-intel]
+        include:
+          - os: macos-15
+            bottle_mode: test_bot
+          - os: macos-15-intel
+            bottle_mode: source_dependencies
+          - os: macos-26
+            bottle_mode: test_bot
+          - os: macos-26-intel
+            bottle_mode: source_dependencies
     runs-on: ${{ matrix.os }}
     permissions:
       actions: read
@@ -49,7 +54,7 @@ jobs:
 
       - name: Base64-encode GITHUB_TOKEN for HOMEBREW_DOCKER_REGISTRY_TOKEN
         id: base64-encode
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && matrix.bottle_mode == 'test_bot'
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -58,9 +63,25 @@ jobs:
           echo "token=${base64_token}" >> "${GITHUB_OUTPUT}"
 
       - run: brew test-bot --only-formulae --root-url=https://ghcr.io/v2/42bv/tap
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && matrix.bottle_mode == 'test_bot'
         env:
           HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
+
+      # Homebrew currently does not publish Go bottles for its Intel macOS
+      # targets. Build that build-only dependency on the CI runner, then
+      # bottle and pour-test Normatik itself. End users still receive a
+      # prebuilt Normatik bottle and never compile Go locally.
+      - name: Build and pour-test Intel bottle
+        if: github.event_name == 'pull_request' && matrix.bottle_mode == 'source_dependencies'
+        run: |
+          brew install --build-bottle --build-from-source --formula 42bv/tap/normatik
+          brew test 42bv/tap/normatik
+          brew bottle --json --root-url=https://ghcr.io/v2/42bv/tap 42bv/tap/normatik
+          brew bottle --merge --write --no-commit --no-all-checks ./normatik--*.bottle.json
+          brew uninstall --formula --force --ignore-dependencies 42bv/tap/normatik
+          brew install --only-dependencies ./normatik--*.bottle.tar.gz
+          brew install ./normatik--*.bottle.tar.gz
+          brew test 42bv/tap/normatik
 
       - name: Upload bottles as artifact
         if: always() && github.event_name == 'pull_request'
