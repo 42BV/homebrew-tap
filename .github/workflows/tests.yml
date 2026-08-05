@@ -68,9 +68,9 @@ jobs:
         env:
           HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
 
-      # Homebrew currently does not publish Go bottles for its Intel macOS
-      # targets. Build that build-only dependency on the CI runner, then
-      # bottle and pour-test Normatik itself. End users still receive a
+      # The test-bot currently rejects older compatible Go bottles for Intel
+      # macOS targets. Install the build-only dependency on the CI runner,
+      # then bottle and pour-test Normatik itself. End users still receive a
       # prebuilt Normatik bottle and never compile Go locally.
       - name: Build and pour-test Intel bottle
         if: github.event_name == 'pull_request' && matrix.bottle_mode == 'source_dependencies'
@@ -80,7 +80,6 @@ jobs:
           brew bottle --json --root-url=https://ghcr.io/v2/42bv/tap 42bv/tap/normatik
           brew bottle --merge --write --no-commit --no-all-checks ./normatik--*.bottle.json
           brew uninstall --formula --force --ignore-dependencies 42bv/tap/normatik
-          brew install --only-dependencies ./normatik--*.bottle.tar.gz
           brew install ./normatik--*.bottle.tar.gz
           brew test 42bv/tap/normatik
 
