@@ -16,7 +16,10 @@ jobs:
   test-bot:
     strategy:
       matrix:
-        os: [macos-26, macos-26-intel]
+        # macOS 15 is a stable Homebrew bottle target for both architectures.
+        # macOS 26 Intel currently has an unbottled Go dependency, which makes
+        # Homebrew correctly skip creation of the Normatik bottle.
+        os: [macos-15, macos-15-intel]
     runs-on: ${{ matrix.os }}
     permissions:
       actions: read
