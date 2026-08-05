@@ -31,7 +31,6 @@ jobs:
       actions: read
       checks: read
       contents: read
-      packages: read
       pull-requests: read
     steps:
       - name: Set up Homebrew
@@ -53,20 +52,10 @@ jobs:
 
       - run: brew test-bot --only-tap-syntax
 
-      - name: Base64-encode GITHUB_TOKEN for HOMEBREW_DOCKER_REGISTRY_TOKEN
-        id: base64-encode
+      # Without an explicit root_url, Homebrew derives the public GitHub
+      # Releases URL from this tap. That is the customer download path.
+      - run: brew test-bot --only-formulae
         if: github.event_name == 'pull_request' && matrix.bottle_mode == 'test_bot'
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          base64_token=$(echo -n "${TOKEN}" | base64 | tr -d "\n")
-          echo "::add-mask::${base64_token}"
-          echo "token=${base64_token}" >> "${GITHUB_OUTPUT}"
-
-      - run: brew test-bot --only-formulae --root-url=https://ghcr.io/v2/42bv/tap
-        if: github.event_name == 'pull_request' && matrix.bottle_mode == 'test_bot'
-        env:
-          HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
 
       # The test-bot currently rejects older compatible Go bottles for Intel
       # macOS targets. Install the build-only dependency on the CI runner,
@@ -75,9 +64,16 @@ jobs:
       - name: Build and pour-test Intel bottle
         if: github.event_name == 'pull_request' && matrix.bottle_mode == 'source_dependencies'
         run: |
+          formula_info="$(brew info --json=v2 --formula 42bv/tap/normatik)"
+          version="$(jq -r '.formulae[0].versions.stable' <<< "$formula_info")"
+          revision="$(jq -r '.formulae[0].revision // 0' <<< "$formula_info")"
+          if [[ "$revision" -gt 0 ]]; then
+            version="${version}_${revision}"
+          fi
+          bottle_root_url="https://github.com/${GITHUB_REPOSITORY}/releases/download/normatik-${version}"
           brew install --build-bottle --formula 42bv/tap/normatik
           brew test 42bv/tap/normatik
-          brew bottle --json --root-url=https://ghcr.io/v2/42bv/tap 42bv/tap/normatik
+          brew bottle --json --root-url="$bottle_root_url" 42bv/tap/normatik
           brew bottle --merge --write --no-commit --no-all-checks ./normatik--*.bottle.json
           brew uninstall --formula --force --ignore-dependencies 42bv/tap/normatik
           HOMEBREW_DEVELOPER=1 brew install --only-dependencies ./normatik--*.bottle*.tar.gz
