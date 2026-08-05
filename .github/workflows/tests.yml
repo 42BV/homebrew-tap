@@ -15,6 +15,7 @@ defaults:
 jobs:
   test-bot:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: macos-15
@@ -74,7 +75,7 @@ jobs:
       - name: Build and pour-test Intel bottle
         if: github.event_name == 'pull_request' && matrix.bottle_mode == 'source_dependencies'
         run: |
-          brew install --build-bottle --build-from-source --formula 42bv/tap/normatik
+          brew install --build-bottle --formula 42bv/tap/normatik
           brew test 42bv/tap/normatik
           brew bottle --json --root-url=https://ghcr.io/v2/42bv/tap 42bv/tap/normatik
           brew bottle --merge --write --no-commit --no-all-checks ./normatik--*.bottle.json
