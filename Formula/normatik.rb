@@ -10,6 +10,15 @@ class Normatik < Formula
     strategy :github_latest
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/42bv/tap"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "16dc502d3809ed0c2d1c3c0001e52dec07527de3d716ae2f6f339640381e5e6e"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "400f3ed882968bec9d2c35a73afe81152fed9cd29044fa663210647656e15a3c"
+    sha256 cellar: :any_skip_relocation, tahoe:         "5c57dd9e74e7d875d360bb54643a30773bf36ee085641032bc0dc910f1772906"
+    sha256 cellar: :any_skip_relocation, sequoia:       "d50cbf72f341b46744ad7ef87acfcf7136b3bb38f66914a87167368ae70cab02"
+  end
+
   depends_on "go" => :build
 
   def install
