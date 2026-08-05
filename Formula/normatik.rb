@@ -1,8 +1,8 @@
 class Normatik < Formula
   desc "Command-line interface for the Normatik Public API"
   homepage "https://github.com/42BV/normatik-cli"
-  url "https://github.com/42BV/normatik-cli/archive/refs/tags/v0.0.3.tar.gz"
-  sha256 "b9a6077c8194a8a1b7fbcac9f331e35c36ade3b1486f805bfde0cae3cd942e26"
+  url "https://github.com/42BV/normatik-cli/archive/refs/tags/v0.0.4.tar.gz"
+  sha256 "5493c6264f2f8b0339bc670ab53fe4b4528e9c38590db8c9d6966eff4d1984a5"
   license "MIT"
 
   depends_on "go" => :build
