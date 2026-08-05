@@ -10,6 +10,8 @@ cask "normatik" do
   desc "Command-line interface for the Normatik Public API"
   homepage "https://github.com/42BV/homebrew-tap"
 
+  depends_on :macos
+
   binary "normatik"
   generate_completions_from_executable "normatik", shell_parameter_format: :cobra
 end
