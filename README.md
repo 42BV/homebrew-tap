@@ -24,7 +24,7 @@ be used for new installations.
 2. Open a pull request that updates `Formula/normatik.rb` to its source URL and
    SHA-256.
 3. Let `brew test-bot` validate the Formula and create bottle artifacts on
-   Apple Silicon, Intel macOS, and Linux.
+   Apple Silicon and Intel macOS.
 4. After reviewing and merging that pull request, run the `brew pr-pull`
    workflow with its number and reviewed head SHA. It uploads bottles to GitHub
    Packages and commits the generated `bottle do` checksums to the Formula.
