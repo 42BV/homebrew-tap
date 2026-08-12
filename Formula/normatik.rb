@@ -1,21 +1,13 @@
 class Normatik < Formula
   desc "Command-line interface for the Normatik Public API"
   homepage "https://github.com/42BV/normatik-cli"
-  url "https://github.com/42BV/normatik-cli/archive/refs/tags/v0.0.1.tar.gz"
-  sha256 "633143c148b28eb9bd9821f740fbf6523316e26c054c5db8fbbea0fa02013a4b"
+  url "https://github.com/42BV/normatik-cli/archive/refs/tags/v0.0.2.tar.gz"
+  sha256 "39d4eac11944eca6b729a2f5eb318df3a6a3e9d31bfb76a792e2c18a0580e91d"
   license "MIT"
 
   livecheck do
     url :stable
     strategy :github_latest
-  end
-
-  bottle do
-    root_url "https://github.com/42BV/homebrew-tap/releases/download/normatik-0.0.1"
-    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "f436b029b1bd47a84d19050fd0536355e788ca69f9a4267fcf87cc9a71d8f453"
-    sha256 cellar: :any_skip_relocation, arm64_sequoia: "ce70b32381c2716854c526e98651688a652d46aff110d3a1e765abbc4cd5d9af"
-    sha256 cellar: :any_skip_relocation, tahoe:         "b6e98e84bb18d1340c0e10c869f00f06a2260ae00923408855f5ed408223fea3"
-    sha256 cellar: :any_skip_relocation, sequoia:       "1b8ecd54e3fb397926ee1b41638a89edb58edbcbf32a6fcff534ee141667a541"
   end
 
   depends_on "go" => :build
