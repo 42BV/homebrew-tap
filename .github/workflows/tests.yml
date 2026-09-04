@@ -50,7 +50,12 @@ jobs:
 
       - run: brew test-bot --only-setup
 
+      # ARM jobs already run tap-syntax. Skip it on Intel: Homebrew dropped
+      # macOS Intel bottles for gmp on 2026-09-02, and brew style installs
+      # shellcheck -> gmp from source. gmplib.org blocks GitHub IPs, so that
+      # step now hangs instead of finishing in ~90s as it did through 1.1.1.
       - run: brew test-bot --only-tap-syntax
+        if: matrix.bottle_mode == 'test_bot'
 
       # Without an explicit root_url, Homebrew derives the public GitHub
       # Releases URL from this tap. That is the customer download path.
