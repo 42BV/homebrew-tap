@@ -19,8 +19,8 @@ source locally.
 1. Publish an immutable public CLI source tag.
 2. Open a pull request that updates `Formula/normatik.rb` to its source URL and
    SHA-256.
-3. Let `brew test-bot` validate the Formula and create bottle artifacts on
-   Apple Silicon and Intel macOS.
+3. Let `brew test-bot` validate the Formula and create a bottle artifact on
+   Apple Silicon macOS 26.
 4. Leave that Formula pull request open and, after reviewing its green checks,
    run the `brew pr-pull` workflow with its number and reviewed head SHA. It
    publishes bottles as public assets on the tap's GitHub Release and commits
