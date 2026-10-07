@@ -10,6 +10,11 @@ class Normatik < Formula
     strategy :github_latest
   end
 
+  bottle do
+    root_url "https://github.com/42BV/homebrew-tap/releases/download/normatik-1.8.0"
+    sha256 cellar: :any_skip_relocation, arm64_tahoe: "365c9722d2866f550093d0c70c3397ccfcfe4f4a64186e72ecbd79a3a85e5132"
+  end
+
   depends_on "go" => :build
 
   def install
